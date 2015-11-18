@@ -20,9 +20,10 @@ class TaskManager(object):
     CONFIG_FILENAME = '/etc/honi_taskmanager.yaml'
 
     def __init__(self):
-        self._load_settings(Settings.__dict__, TaskManager.CONFIG_FILENAME)
-        self._verify_dir(Settings.CONFIG_BASE_DIR)
-        self._verify_dir(Settings.CONFIG_TASKS_DIR)
+        self.settings = Settings()
+        self._load_settings(self.settings.__dict__, TaskManager.CONFIG_FILENAME)
+        self._verify_dir(self.settings.CONFIG_BASE_DIR)
+        self._verify_dir(self.settings.CONFIG_TASKS_DIR)
 
     def _load_settings(self, config, config_filename):
         with open(config_filename, 'r') as config_file:
@@ -51,7 +52,7 @@ class TaskManager(object):
             filename (str): name of the zip file with the test data
         """
         archive = zipfile.ZipFile(filename, 'r')
-        archive.extractall(Settings.CONFIG_TASKS_DIR)
+        archive.extractall(self.settings.CONFIG_TASKS_DIR)
 
     def run(self, filename):
         """ Run the task with input data found in the test directories.
@@ -61,7 +62,7 @@ class TaskManager(object):
         Afterwards the real inputs are of format <task_name>.in.X, and
         corresponding output <task_name>.out.X.
         """
-        tests_dir = os.path.join(Settings.CONFIG_TASKS_DIR, os.path.basename(filename))
+        tests_dir = os.path.join(self.settings.CONFIG_TASKS_DIR, os.path.basename(filename))
         files = os.listdir(tests_dir)
 
         dummy_ins = [f for f in files if 'dummy.in.' in f]
