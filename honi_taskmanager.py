@@ -9,7 +9,7 @@ import subprocess32 as subprocess
 from natsort import natsorted
 
 class Settings(object):
-    CONFIG_BASE_DIR = '/mnt/data/honi_taskmanager/'
+    CONFIG_BASE_DIR = '.'
     CONFIG_TASKS_DIR = os.path.join(CONFIG_BASE_DIR, 'tasks')
 
 
