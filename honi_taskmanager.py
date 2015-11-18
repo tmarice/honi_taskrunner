@@ -4,6 +4,7 @@ import argparse
 import zipfile
 import os
 
+import yaml
 import subprocess32 as subprocess
 from natsort import natsorted
 
@@ -16,9 +17,16 @@ class TaskManager(object):
     """ Manage the task list and taks operations.
     """
 
+    CONFIG_FILENAME = '/etc/honi_taskmanager.yaml'
+
     def __init__(self):
+        self._load_settings(Settings.__dict__, TaskManager.CONFIG_FILENAME)
         self._verify_dir(Settings.CONFIG_BASE_DIR)
         self._verify_dir(Settings.CONFIG_TASKS_DIR)
+
+    def _load_settings(self, config, config_filename):
+        with open(config_filename, 'r') as config_file:
+            config.update(yaml.load(config_file))
 
     def _verify_dir(self, dirname):
         if not os.path.exists(dirname):
@@ -101,7 +109,6 @@ class TaskManager(object):
             return False
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
@@ -115,4 +122,3 @@ if __name__ == "__main__":
         task_manager.add(options.name)
     elif options.action == "run":
         task_manager.run(options.name)
-
